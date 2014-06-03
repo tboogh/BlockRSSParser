@@ -68,48 +68,31 @@
     
     if ([elementName isEqualToString:@"item"] || [elementName isEqualToString:@"entry"]) {
         currentItem = [[RSSItem alloc] init];
+        [items addObject:currentItem];
     }
     
     tmpString = [[NSMutableString alloc] init];
     
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
-{    
-    if ([elementName isEqualToString:@"item"] || [elementName isEqualToString:@"entry"]) {
-        [items addObject:currentItem];
-    }
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
     if (currentItem != nil && tmpString != nil) {
         
         if ([elementName isEqualToString:@"title"]) {
             [currentItem setTitle:tmpString];
-        }
-        
-        if ([elementName isEqualToString:@"description"]) {
+        } else if ([elementName isEqualToString:@"description"]) {
             [currentItem setItemDescription:tmpString];
-        }
-        
-        if ([elementName isEqualToString:@"content:encoded"] || [elementName isEqualToString:@"content"]) {
+        } else if ([elementName isEqualToString:@"content:encoded"] || [elementName isEqualToString:@"content"]) {
             [currentItem setContent:tmpString];
-        }
-        
-        if ([elementName isEqualToString:@"link"]) {
+        } else if ([elementName isEqualToString:@"link"]) {
             [currentItem setLink:[NSURL URLWithString:tmpString]];
-        }
-        
-        if ([elementName isEqualToString:@"comments"]) {
+        } else if ([elementName isEqualToString:@"comments"]) {
             [currentItem setCommentsLink:[NSURL URLWithString:tmpString]];
-        }
-        
-        if ([elementName isEqualToString:@"wfw:commentRss"]) {
+        } else if ([elementName isEqualToString:@"wfw:commentRss"]) {
             [currentItem setCommentsFeed:[NSURL URLWithString:tmpString]];
-        }
-        
-        if ([elementName isEqualToString:@"slash:comments"]) {
+        } else if ([elementName isEqualToString:@"slash:comments"]) {
             [currentItem setCommentsCount:[NSNumber numberWithInt:[tmpString intValue]]];
-        }
-        
-        if ([elementName isEqualToString:@"pubDate"]) {
+        } else if ([elementName isEqualToString:@"pubDate"]) {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 
             NSLocale *local = [[NSLocale alloc] initWithLocaleIdentifier:@"en_EN"];
@@ -118,13 +101,9 @@
             [formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z"];
             
             [currentItem setPubDate:[formatter dateFromString:tmpString]];
-        }
-
-        if ([elementName isEqualToString:@"dc:creator"]) {
+        } else if ([elementName isEqualToString:@"dc:creator"]) {
             [currentItem setAuthor:tmpString];
-        }
-        
-        if ([elementName isEqualToString:@"guid"]) {
+        } else if ([elementName isEqualToString:@"guid"]) {
             [currentItem setGuid:tmpString];
         }
     }
